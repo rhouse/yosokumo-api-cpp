@@ -1,0 +1,70 @@
+# begin makefile to compile yosokumo C++ code
+
+include ../makefile.inc
+
+.PHONY: all
+all : 
+	@cd ws-cpp; $(MAKE) $(MFLAGS)
+
+	@rm -f $(OBJ_DIR)/*.o
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Base64.o -c Base64.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Catalog.o -c Catalog.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Cell.o -c Cell.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/CellBlock.o -c CellBlock.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Credentials.o -c Credentials.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/DigestRequest.o -I$(OPENSSL_DIR)/include -c DigestRequest.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/EmptyBlock.o -c EmptyBlock.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/EmptyValue.o -c EmptyValue.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/IntegerValue.o -c IntegerValue.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Message.o -c Message.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/NaturalValue.o -c NaturalValue.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Panel.o -c Panel.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Predictor.o -c Predictor.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/PredictorBlock.o -c PredictorBlock.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Privilege.o -c Privilege.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/RealValue.o -c RealValue.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Role.o -c Role.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Roster.o -c Roster.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/ServiceException.o -c ServiceException.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/SpecialValue.o -c SpecialValue.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Specimen.o -c Specimen.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/SpecimenBlock.o -c SpecimenBlock.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Study.o -c Study.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/Value.o -c Value.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/YosokumoDIF.o -c YosokumoDIF.cpp 
+
+	$(CXX) $(CXXFLAGS) -o $(OBJ_DIR)/YosokumoProtobuf.o -I$(PROTO_CPP_DIR) -Wno-long-long -c YosokumoProtobuf.cpp 
+
+
+# clean gets rid of all object files in OBJ_DIR
+
+.PHONY: clean
+clean :
+	@rm -f $(OBJ_DIR)/*.o
+
+#### end makefile to compile yosokumo C++ code

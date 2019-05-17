@@ -1,0 +1,31 @@
+How to exclude stuff from generated Doxygen documentation
+
+The following info comes from this StackOverflow link:
+
+    http://stackoverflow.com/questions/562763/doxygen-hiding-private-protected-method-and-tips
+
+To hide big chunks of code and documentation:
+
+    /*! \cond PRIVATE */
+    <here goes private documented source code>
+    /*! \endcond */
+
+Run with ENABLED_SECTIONS = PRIVATE to create your internal version of the
+docs.  You can have several conditions and enable/disable them according to
+the audience.
+
+To hide just part of a documentation block, use \internal (will hide until
+the end of the block unless \endinternal is found)
+
+Note: you can use @ notation if you prefer it over backslashes.
+
+Also, look at these properties in the Doxygen config file:
+
+    EXTRACT_PRIVATE        = YES
+    EXTRACT_ALL            = YES
+    EXTRACT_PRIVATE        = YES
+    EXTRACT_STATIC         = YES
+    EXTRACT_LOCAL_CLASSES  = YES
+    EXTRACT_LOCAL_METHODS  = YES
+
+<end>

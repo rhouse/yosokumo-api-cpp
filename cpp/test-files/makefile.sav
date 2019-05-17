@@ -1,0 +1,157 @@
+# begin makefile to compile yosokumo C++ code for unit tests and other tests
+
+include ../makefile.inc
+
+INC = -I$(UNITTEST_INC) -I$(SRC_DIR)
+
+.PHONY: tests
+tests : make-main create-cpp-files compile link
+
+.PHONY : make-main
+make-main :
+	@cd ../src; $(MAKE) $(MFLAGS)
+
+.PHONY: create-cpp-files
+create-cpp-files : 
+	@cd ws-cpp; $(MAKE) $(MFLAGS)
+
+OBJ_TEST_FILES =                     \
+         $(TEST_DIR)/Base64Test.o    \
+         $(TEST_DIR)/BlockTest.o     \
+         $(TEST_DIR)/PredictorTest.o \
+         $(TEST_DIR)/StudyTest.o     \
+         $(TEST_DIR)/TestYosokumo.o  \
+         $(TEST_DIR)/ValueTest.o
+
+
+.PHONY: compile
+compile : $(OBJ_TEST_FILES)
+
+.PHONY: link
+link : $(TEST_DIR)/TestYosokumo
+
+$(TEST_DIR)/TestYosokumo : $(OBJ_TEST_FILES)
+	g++ -o $(TEST_DIR)/TestYosokumo $(OBJ_TEST_FILES) -L$(UNITTEST_DIR) \
+        -L$(LIB_DIR) \
+        -L/home/roger/OpenSourceCode/base64/libb64-1.2/src \
+        -lUnitTest++ -lyosokumo -lb64
+
+
+# WATCH OUT!  In future may not want to link ALL .o files into TestYosokumo 
+
+# Saving stuff here:
+###compile :                                    \
+###         $(TEST_DIR)/CatalogTest.o          \
+###         $(TEST_DIR)/RoleTest.o             \
+###         $(TEST_DIR)/RosterTest.o           \
+###         $(TEST_DIR)/SpecimenTest.o         \
+###         $(TEST_DIR)/StudyTest.o            \
+###         $(TEST_DIR)/YosokumoSmokeTest.o     \
+###         $(TEST_DIR)/SuburbProfile.o         \
+###         $(TEST_DIR)/YosokumoPredictionTest.o\
+###         $(TEST_DIR)/YosokumoStressTest.o    \
+###         $(TEST_DIR)/YAndroidTest.o
+
+$(TEST_DIR)/BlockTest.o : BlockTest.cpp $(SRC_DIR)/PredictorBlock.h \
+            $(SRC_DIR)/EmptyBlock.h $(SRC_DIR)/EmptyBlock.cpp
+	@rm -f $(TEST_DIR)/BlockTest.o
+	$(CXX) $(CXXFLAGS) $(INC) -o $(TEST_DIR)/BlockTest.o -c BlockTest.cpp 
+
+# Note that the -D, -I, and -L options below are needed so we can use some
+# open source code implementing libb64 so we can compare our base64 encoding
+# and decoding with an independent source.  (Moved -L to link step above.)
+$(TEST_DIR)/Base64Test.o : Base64Test.cpp  $(SRC_DIR)/Base64.h \
+            $(SRC_DIR)/Base64.cpp
+	@rm -f $(TEST_DIR)/Base64Test.o
+	$(CXX) $(CXXFLAGS) $(INC) -o $(TEST_DIR)/Base64Test.o \
+        -DBUFFERSIZE=1024 \
+        -I/home/roger/OpenSourceCode/base64/libb64-1.2/include/b64 \
+        -c Base64Test.cpp
+
+$(TEST_DIR)/PredictorTest.o : PredictorTest.cpp $(SRC_DIR)/Predictor.h \
+            $(SRC_DIR)/Predictor.cpp
+	@rm -f $(TEST_DIR)/PredictorTest.o
+	$(CXX) $(CXXFLAGS) $(INC) -o $(TEST_DIR)/PredictorTest.o -c PredictorTest.cpp 
+
+$(TEST_DIR)/StudyTest.o : StudyTest.cpp $(SRC_DIR)/Study.h $(SRC_DIR)/Study.cpp
+	@rm -f $(TEST_DIR)/StudyTest.o
+	$(CXX) $(CXXFLAGS) $(INC) -o $(TEST_DIR)/StudyTest.o -c StudyTest.cpp 
+
+$(TEST_DIR)/TestYosokumo.o : TestYosokumo.cpp
+	@rm -f $(TEST_DIR)/TestYosokumo.o
+	$(CXX) $(CXXFLAGS) -I$(UNITTEST_INC) -o $(TEST_DIR)/TestYosokumo.o -c TestYosokumo.cpp 
+
+$(TEST_DIR)/ValueTest.o : ValueTest.cpp $(SRC_DIR)/Value.h \
+            $(SRC_DIR)/EmptyValue.h $(SRC_DIR)/EmptyValue.cpp \
+            $(SRC_DIR)/NaturalValue.h $(SRC_DIR)/NaturalValue.cpp \
+            $(SRC_DIR)/IntegerValue.h $(SRC_DIR)/IntegerValue.cpp \
+            $(SRC_DIR)/RealValue.h $(SRC_DIR)/RealValue.cpp \
+            $(SRC_DIR)/SpecialValue.h $(SRC_DIR)/SpecialValue.cpp
+	@rm -f $(TEST_DIR)/ValueTest.o
+	$(CXX) $(CXXFLAGS) $(INC) -o $(TEST_DIR)/ValueTest.o -c ValueTest.cpp 
+
+
+###$(TEST_DIR)/Base64XXX.o : Base64XXX.cpp
+###	@rm -f $(TEST_DIR)/Base64XXX.o
+###	g++ -classpath ..:$(JUNIT_JAR) -d .. Base64XXX.cpp 
+
+###$(TEST_DIR)/CatalogTest.o : CatalogTest.cpp
+###	@rm -f $(TEST_DIR)/CatalogTest.o
+###	g++ -classpath ..:$(JUNIT_JAR) -d .. CatalogTest.cpp 
+
+###$(TEST_DIR)/RoleTest.o : RoleTest.cpp
+###	@rm -f $(TEST_DIR)/RoleTest.o
+###	g++ -classpath ..:$(JUNIT_JAR) -d .. RoleTest.cpp 
+
+###$(TEST_DIR)/RosterTest.o : RosterTest.cpp
+###	@rm -f $(TEST_DIR)/RosterTest.o
+###	g++ -classpath ..:$(JUNIT_JAR) -d .. RosterTest.cpp 
+
+###$(TEST_DIR)/SpecimenTest.o : SpecimenTest.cpp
+###	@rm -f $(TEST_DIR)/SpecimenTest.o
+###	g++ -classpath ..:$(JUNIT_JAR) -d .. SpecimenTest.cpp 
+
+###$(TEST_DIR)/YosokumoSmokeTest.o : YosokumoSmokeTest.cpp
+###	@rm -f $(TEST_DIR)/YosokumoSmokeTest.o
+###	g++ -classpath .. -d .. YosokumoSmokeTest.cpp 
+
+###$(TEST_DIR)/SuburbProfile.o : SuburbProfile.cpp
+###	@rm -f $(TEST_DIR)/SuburbProfile.o
+###	g++ -classpath .. -d .. SuburbProfile.cpp 
+
+###$(TEST_DIR)/YosokumoPredictionTest.o : YosokumoPredictionTest.cpp \
+###                              $(TEST_DIR)/SuburbProfile.o
+###	@rm -f $(TEST_DIR)/YosokumoPredictionTest.o
+###	g++ -classpath .. -d .. YosokumoPredictionTest.cpp 
+
+###$(TEST_DIR)/YosokumoStressTest.o : YosokumoStressTest.cpp \
+###                              $(TEST_DIR)/SuburbProfile.o
+###	@rm -f $(TEST_DIR)/YosokumoStressTest.o
+###	g++ -classpath .. -d .. YosokumoStressTest.cpp 
+
+###$(TEST_DIR)/YAndroidTest.o : YAndroidTest.cpp
+###	@rm -f $(TEST_DIR)/YAndroidTest.o
+###	g++ -classpath .. -d .. YAndroidTest.cpp 
+
+# clean gets rid of all test class files in TEST_DIR
+
+.PHONY: clean
+clean :
+	@rm -f $(TEST_DIR)/Base64Test.o
+	@rm -f $(TEST_DIR)/BlockTest.o
+	@rm -f $(TEST_DIR)/StudyTest.o
+	@rm -f $(TEST_DIR)/PredictorTest.o
+	@rm -f $(TEST_DIR)/TestYosokumo.o
+	@rm -f $(TEST_DIR)/ValueTest.o
+
+###	@rm -f $(TEST_DIR)/CatalogTest.o
+###	@rm -f $(TEST_DIR)/RoleTest.o
+###	@rm -f $(TEST_DIR)/RosterTest.o
+###	@rm -f $(TEST_DIR)/SpecimenTest.o
+###	@rm -f $(TEST_DIR)/YosokumoSmokeTest.o
+###	@rm -f $(TEST_DIR)/SuburbProfile.o
+###	@rm -f $(TEST_DIR)/YosokumoPredictionTest.o
+###	@rm -f $(TEST_DIR)/YosokumoStressTest.o
+###	@rm -f $(TEST_DIR)/YAndroidTest.o
+
+# end makefile to compile yosokumo C++ code for unit tests and other tests

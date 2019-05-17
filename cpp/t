@@ -1,0 +1,3 @@
+./obj/test/TestYosokumo
+#valgrind ./obj/test/TestYosokumo 2>valgrind.out
+#cat valgrind.out

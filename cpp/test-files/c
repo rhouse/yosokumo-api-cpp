@@ -1,0 +1,3 @@
+g++ -Wall -pedantic -o test \
+  -I/home/roger/OpenSourceCode/unittest++/UnitTest++/src test.cpp \
+  -L/home/roger/OpenSourceCode/unittest++/UnitTest++ -lUnitTest++
